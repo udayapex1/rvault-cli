@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+
     totpSecret: {
       type: String,
       default: null,

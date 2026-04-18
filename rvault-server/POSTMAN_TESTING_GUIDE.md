@@ -252,6 +252,138 @@ The auth middleware will:
 
 ---
 
+### 7. 📤 Upload File
+
+**`POST {{baseUrl}}/api/files/upload`**
+
+**Headers:**
+| Key           | Value                  |
+|---------------|------------------------|
+| Authorization | Bearer `{{jwtToken}}`  |
+
+**Body:** Select `form-data` in Postman
+| Key    | Type | Value              |
+|--------|------|--------------------|
+| `file` | File | *(select a file)*  |
+
+> ⚠️ Max file size: **50MB**
+
+**✅ Success Response** `201 Created`:
+```json
+{
+  "message": "File uploaded successfully",
+  "file": {
+    "id": "664a1b2c3d4e5f6a7b8c9d0e",
+    "name": "resume.pdf",
+    "size": 204800,
+    "mimeType": "application/pdf",
+    "uploadedAt": "2026-04-18T17:00:00.000Z"
+  }
+}
+```
+
+**❌ Error Responses:**
+
+| Status | Body |
+|--------|------|
+| `400`  | `{ "message": "No file provided" }` |
+| `400`  | `{ "message": "Storage limit exceeded" }` |
+| `401`  | `{ "message": "Unauthorized. No token provided." }` |
+
+---
+
+### 8. 📁 List Files
+
+**`GET {{baseUrl}}/api/files`**
+
+**Headers:**
+| Key           | Value                  |
+|---------------|------------------------|
+| Authorization | Bearer `{{jwtToken}}`  |
+
+**✅ Success Response** `200 OK`:
+```json
+{
+  "message": "Files fetched",
+  "count": 2,
+  "files": [
+    {
+      "_id": "664a1b2c3d4e5f6a7b8c9d0e",
+      "originalName": "resume.pdf",
+      "mimeType": "application/pdf",
+      "size": 204800,
+      "createdAt": "2026-04-18T17:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### 9. 📥 Download File
+
+**`GET {{baseUrl}}/api/files/download/:fileId`**
+
+**Headers:**
+| Key           | Value                  |
+|---------------|------------------------|
+| Authorization | Bearer `{{jwtToken}}`  |
+
+Replace `:fileId` with the actual file ID from the upload/list response.
+
+**✅ Success Response** `200 OK`:
+```json
+{
+  "message": "Download link generated",
+  "fileName": "resume.pdf",
+  "downloadUrl": "https://s3.us-east-005.backblazeb2.com/rvaultstorage2110/uploads/...?X-Amz-Signature=...",
+  "expiresIn": "1 hour"
+}
+```
+
+---
+
+### 10. 🗑️ Delete File
+
+**`DELETE {{baseUrl}}/api/files/:fileId`**
+
+**Headers:**
+| Key           | Value                  |
+|---------------|------------------------|
+| Authorization | Bearer `{{jwtToken}}`  |
+
+**✅ Success Response** `200 OK`:
+```json
+{
+  "message": "File deleted",
+  "fileId": "664a1b2c3d4e5f6a7b8c9d0e"
+}
+```
+
+---
+
+### 11. 💾 Storage Info
+
+**`GET {{baseUrl}}/api/files/storage`**
+
+**Headers:**
+| Key           | Value                  |
+|---------------|------------------------|
+| Authorization | Bearer `{{jwtToken}}`  |
+
+**✅ Success Response** `200 OK`:
+```json
+{
+  "storageUsed": 204800,
+  "storageLimit": 5368709120,
+  "storageUsedMB": "0.20",
+  "storageLimitGB": "5.00",
+  "percentUsed": "0.00"
+}
+```
+
+---
+
 ## 🧪 Step-by-Step Testing Workflow
 
 Follow this exact order to test the full auth flow:

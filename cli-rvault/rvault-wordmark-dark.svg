@@ -1,0 +1,15 @@
+<svg width="800" height="240" viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon -->
+  <rect width="240" height="240" rx="54" fill="#0d0d0d"/>
+  <rect x="18" y="18" width="204" height="204" rx="44" fill="none" stroke="#1e1e1e" stroke-width="5"/>
+  <circle cx="62" cy="62" r="16" fill="#ff5f57"/>
+  <circle cx="110" cy="62" r="16" fill="#febc2e"/>
+  <circle cx="158" cy="62" r="16" fill="#28c840"/>
+  <line x1="19" y1="92" x2="221" y2="92" stroke="#1e1e1e" stroke-width="5"/>
+  <text x="38" y="165" font-family="monospace" font-size="58" font-weight="700" fill="#00d4ff">❯</text>
+  <text x="96" y="165" font-family="monospace" font-size="58" font-weight="600" fill="#ffffff">rv</text>
+  <rect x="182" y="118" width="28" height="54" rx="5" fill="#00d4ff"/>
+  <!-- Text -->
+  <text x="290" y="138" font-family="monospace" font-size="90" font-weight="700" fill="#ffffff">rvault</text>
+  <text x="293" y="180" font-family="monospace" font-size="36" fill="#444444">remote file vault</text>
+</svg>

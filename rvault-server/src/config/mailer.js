@@ -11,20 +11,12 @@ const transporter = nodemailer.createTransport({
 export const sendOTPMail = async (email, name, otp) => {
   const digits = otp.toString().split("");
 
+  // Minimalist, high-contrast OTP Digit design
   const digitBox = (d) => `
-    <td align="center" style="padding:0 4px;">
-      <table cellpadding="0" cellspacing="0">
-        <tr>
-          <td align="center" style="width:42px;height:48px;border:1.5px solid #e0e0e0;border-radius:8px;font-family:monospace;font-size:22px;font-weight:700;color:#111;">
-            ${d}
-          </td>
-        </tr>
-        <tr>
-          <td align="center" style="padding-top:4px;">
-            <div style="width:20px;height:2px;background:#111;border-radius:2px;margin:0 auto;"></div>
-          </td>
-        </tr>
-      </table>
+    <td align="center" style="padding: 0 6px;">
+      <div style="width: 48px; height: 56px; line-height: 56px; background: #f1f5f9; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700; color: #0f172a; border: 1px solid #e2e8f0;">
+        ${d}
+      </div>
     </td>
   `;
 
@@ -35,149 +27,87 @@ export const sendOTPMail = async (email, name, otp) => {
       subject: `${otp} is your rvault verification code`,
       html: `
 <!DOCTYPE html>
-<html>
-<body style="margin:0;padding:0;background:#08010f;font-family:sans-serif;">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification Code</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #050505; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
 
-  <!-- Stars background via scattered dots (email-safe) -->
-  <table width="100%" cellpadding="0" cellspacing="0">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #050505; padding: 40px 20px;">
     <tr>
-      <td align="center" style="padding:48px 16px 0;">
-
-        <!-- White Card -->
-        <table width="400" cellpadding="0" cellspacing="0" 
-          style="background:#ffffff;border-radius:24px;overflow:hidden;">
+      <td align="center">
+        
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 480px; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+          
           <tr>
-            <td style="padding:36px 32px 28px;">
-
-              <!-- Logo -->
-              <table width="100%" cellpadding="0" cellspacing="0">
+            <td align="center" style="padding: 40px 40px 30px 40px;">
+              <table border="0" cellspacing="0" cellpadding="0" style="background: #0f172a; border-radius: 12px; width: 80px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);">
                 <tr>
-                  <td align="center" style="padding-bottom:20px;">
-                    <table cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td align="center" style="width:52px;height:52px;background:#111;border-radius:14px;font-family:monospace;font-size:18px;font-weight:700;color:#fff;">
-                          rv
-                        </td>
-                      </tr>
-                    </table>
+                  <td style="padding: 10px 12px;">
+                    <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+                      <span style="width: 6px; height: 6px; background: #ff5f57; border-radius: 50%; display: inline-block;"></span>
+                      <span style="width: 6px; height: 6px; background: #febc2e; border-radius: 50%; display: inline-block;"></span>
+                      <span style="width: 6px; height: 6px; background: #28c840; border-radius: 50%; display: inline-block;"></span>
+                    </div>
+                    <div style="font-family: monospace; font-size: 12px; color: #38bdf8; font-weight: bold;">
+                      ❯ <span style="color: #fff;">rv</span><span style="display: inline-block; width: 6px; height: 12px; background: #38bdf8; margin-left: 2px; vertical-align: middle;"></span>
+                    </div>
                   </td>
                 </tr>
               </table>
+            </td>
+          </tr>
 
-              <!-- Title -->
-              <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="center" style="padding: 0 40px 40px 40px;">
+              <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">Verify your identity</h1>
+              <p style="margin: 12px 0 32px 0; font-size: 15px; color: #64748b; line-height: 1.5;">Enter the following code to secure your <strong>rvault</strong> session. It will expire in 10 minutes.</p>
+
+              <table border="0" cellspacing="0" cellpadding="0" align="center">
                 <tr>
-                  <td align="center" style="padding-bottom:28px;">
-                    <p style="margin:0;font-size:18px;font-weight:600;color:#111;line-height:1.4;">
-                      Your signup verification<br/>Code
+                  ${digits.map(digitBox).join("")}
+                </tr>
+              </table>
+
+              <p style="margin: 32px 0 0 0; font-size: 13px; color: #94a3b8;">
+                Security ID: <span style="font-family: monospace; color: #0f172a; font-weight: 600;">RV-${Math.random().toString(36).substring(7).toUpperCase()}</span>
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 30px 40px; background: #f8fafc; border-top: 1px solid #f1f5f9;">
+              <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="vertical-align: top; padding-right: 12px; font-size: 18px;">🛡️</td>
+                  <td>
+                    <p style="margin: 0; font-size: 13px; font-weight: 600; color: #0f172a;">Identity Protection</p>
+                    <p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.5;">
+                      This request originated from a new login attempt for <b>${email}</b>. If this wasn't you, ignore this email or contact support.
                     </p>
                   </td>
                 </tr>
               </table>
-
-              <!-- OTP Digits -->
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding-bottom:12px;">
-                    <table cellpadding="0" cellspacing="0">
-                      <tr>
-                        ${digits.map(digitBox).join("")}
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td align="center" style="padding-bottom:20px;">
-                    <p style="margin:0;font-size:12px;color:#aaa;">Don't share this code with anyone!</p>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Warning Box -->
-              <table width="100%" cellpadding="0" cellspacing="0" 
-                style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;margin-bottom:20px;">
-                <tr>
-                  <td style="padding:14px 16px;">
-                    <p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#92400e;">
-                      ⚠️ Was this request not made by you?
-                    </p>
-                    <p style="margin:0;font-size:11px;color:#92400e;line-height:1.6;">
-                      This code was generated for <strong>${email}</strong>. 
-                      If you did not initiate this request, you can safely 
-                      <strong>ignore this email.</strong>
-                    </p>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Do not reply -->
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding-bottom:16px;">
-                    <p style="margin:0;font-size:11px;color:#aaa;">
-                      This is an automated message. <strong style="color:#555;">Please do not reply.</strong>
-                    </p>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- IP Badge -->
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center">
-                    <table cellpadding="0" cellspacing="0" 
-                      style="background:#111;border-radius:20px;">
-                      <tr>
-                        <td style="padding:6px 16px;">
-                          <table cellpadding="0" cellspacing="0">
-                            <tr>
-                              <td style="width:6px;height:6px;background:#00ff88;border-radius:50%;"></td>
-                              <td style="padding-left:8px;font-family:monospace;font-size:11px;color:#fff;">
-                                rvault security verified
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
             </td>
           </tr>
         </table>
 
-        <!-- Social + Footer -->
-        <table width="400" cellpadding="0" cellspacing="0">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 480px; margin-top: 30px;">
           <tr>
-            <td align="center" style="padding:24px 0 8px;">
-              <table cellpadding="0" cellspacing="0">
-                <tr>
-                  <td style="padding:0 6px;">
-                    <a href="https://github.com/udayapex1" 
-                      style="display:inline-block;width:36px;height:36px;background:#24292e;border-radius:50%;text-align:center;line-height:36px;color:#fff;font-size:14px;text-decoration:none;">
-                      G
-                    </a>
-                  </td>
-                  <td style="padding:0 6px;">
-                    <a href="https://linkedin.com/in/uday-pareta-b114aa284" 
-                      style="display:inline-block;width:36px;height:36px;background:#0077b5;border-radius:50%;text-align:center;line-height:36px;color:#fff;font-size:14px;text-decoration:none;">
-                      in
-                    </a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="padding-bottom:8px;">
-              <p style="margin:0;font-size:11px;color:#555;">All rights reserved to rvault © 2026.</p>
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="padding-bottom:40px;">
-              <p style="margin:0;font-size:11px;color:#555;">Email: noreply@rvault.dev</p>
+            <td align="center">
+              <div style="margin-bottom: 20px;">
+                <a href="https://github.com/udayapex1" style="text-decoration: none; margin: 0 10px;">
+                  <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="20" height="20" style="filter: invert(1); opacity: 0.6;">
+                </a>
+                <a href="https://linkedin.com/in/uday-pareta-b114aa284" style="text-decoration: none; margin: 0 10px;">
+                  <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="20" height="20" style="filter: invert(1); opacity: 0.6;">
+                </a>
+              </div>
+              <p style="margin: 0; font-size: 12px; color: #475569; letter-spacing: 0.05em; text-transform: uppercase;">
+                &copy; 2026 rvault Protocol &bull; Built for Privacy
+              </p>
             </td>
           </tr>
         </table>

@@ -3,6 +3,9 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.routes.js";
+import fileRoutes from "./src/routes/file.routes.js";
+import userRoutes from "./src/routes/user.routes.js";
+import adminRoutes from "./src/routes/admin.routes.js";
 
 const app = express();
 app.use(cors());
@@ -25,6 +28,9 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/files", fileRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 // ── Start Server ────────────────────────────
 const startServer = async () => {
