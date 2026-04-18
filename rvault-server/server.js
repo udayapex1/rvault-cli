@@ -1,0 +1,42 @@
+import "./src/config/loadEnv.js";
+import express from "express";
+import cors from "cors";
+import { connectDB } from "./src/config/db.js";
+import authRoutes from "./src/routes/auth.routes.js";
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+const port = process.env.PORT || 3000;
+
+// ── Routes ──────────────────────────────────
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is healthy 🚀",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.use("/api/auth", authRoutes);
+
+// ── Start Server ────────────────────────────
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
