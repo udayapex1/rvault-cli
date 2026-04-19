@@ -42,6 +42,13 @@ const inboxSchema = new mongoose.Schema(
       // denormalized → bytes
     },
 
+    message: {
+      type: String,
+      default: null,
+      maxlength: 200,
+      // optional note from sender
+    },
+
     // Status
     status: {
       type: String,

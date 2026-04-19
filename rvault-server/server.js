@@ -6,6 +6,9 @@ import authRoutes from "./src/routes/auth.routes.js";
 import fileRoutes from "./src/routes/file.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
 import adminRoutes from "./src/routes/admin.routes.js";
+import sharedLinkRoutes from "./src/routes/sharedLink.routes.js";
+import inboxRoutes from "./src/routes/inbox.routes.js";
+import clipRoutes from "./src/routes/clip.routes.js";
 
 const app = express();
 app.use(cors());
@@ -31,6 +34,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/files", fileRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/share", sharedLinkRoutes);
+app.use("/api/inbox", inboxRoutes);
+app.use("/api/clip", clipRoutes);
 
 // ── Start Server ────────────────────────────
 const startServer = async () => {
