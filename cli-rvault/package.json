@@ -1,0 +1,35 @@
+{
+  "name": "cli-rvault",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "rvault": "bin/rvault.js"
+  },
+  "scripts": {
+    "dev": "node bin/rvault.js",
+    "start": "node bin/rvault.js"
+  },
+  "keywords": [
+    "cli",
+    "vault",
+    "remote",
+    "file",
+    "storage"
+  ],
+  "author": "Uday Pareta",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.15.0",
+    "chalk": "^5.6.2",
+    "cli-table3": "^0.6.5",
+    "commander": "^14.0.3",
+    "configstore": "^8.0.0",
+    "ink": "^7.0.1",
+    "inquirer": "^13.4.1",
+    "ora": "^9.3.0",
+    "qrcode-terminal": "^0.12.0",
+    "react": "^19.2.5"
+  }
+}
