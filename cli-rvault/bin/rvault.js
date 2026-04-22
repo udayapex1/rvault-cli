@@ -4,6 +4,8 @@
 import { program } from "commander";
 import chalk from "chalk";
 import { dev } from "../src/commands/dev.js";
+import axios from "axios";
+
 
 const banner = `
 ${chalk.cyan("██████╗ ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗")}
@@ -24,8 +26,10 @@ program
     "-v, --version",
     "Show current version"
   )
-  // Register the --dev flag
+  // Register the flags
+
   .option("--dev", "Show developer profile and project details")
+  .option("--health", "Check server health")
   .addHelpText("before", banner)
   .addHelpText("after", `
 ${chalk.gray("─────────────────────────────────────────────")}
@@ -44,12 +48,14 @@ ${chalk.gray("  Docs:")} ${chalk.cyan("https://github.com/udayapex1/rvault-cli")
 ${chalk.gray("─────────────────────────────────────────────")}
   `);
 
+
 // ─── Flag Logic ───
 // We parse options first to catch --dev before commands
 program.on("option:dev", () => {
   dev();
   process.exit(0);
 });
+
 
 // ─── Auth ───
 program.command("register").description("Create a new account");
@@ -109,9 +115,24 @@ clip
   .description("Clear all clips");
 
 // ─── Execution ───
-program.parse(process.argv);
+if (process.argv.includes("--health")) {
+  console.log(chalk.cyan("Checking server health..."));
+  axios.get("https://rvault-cli.onrender.com/health")
+    .then(response => {
+      console.log(chalk.green("✔ Server is healthy!"));
+      console.dir(response.data, { depth: null, colors: true });
+      process.exit(0);
+    })
+    .catch(error => {
+      console.log(chalk.red("✖ Server health check failed."));
+      console.log(chalk.red(error.message));
+      process.exit(1);
+    });
+} else {
+  program.parse(process.argv);
 
-// If no arguments are provided, show help
-if (!process.argv.slice(2).length) {
-  program.outputHelp();
+  // If no arguments are provided, show help
+  if (!process.argv.slice(2).length) {
+    program.outputHelp();
+  }
 }
