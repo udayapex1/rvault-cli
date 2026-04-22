@@ -1,15 +1,9 @@
 #
 
-██████╗ ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗
-██╔══██╗██║   ██║██╔══██╗██║   ██║██║  ╚══██╔══╝
-██████╔╝██║   ██║███████║██║   ██║██║     ██║
-██╔══██╗╚██╗ ██╔╝██╔══██║██║   ██║██║     ██║
-██║  ██║ ╚████╔╝ ██║  ██║╚██████╔╝███████╗██║
-╚═╝  ╚═╝  ╚═══╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝
+<div align="center">
+  <img src="https://res.cloudinary.com/dwemivxbp/image/upload/v1776882458/rvault-banner_e3v16y.svg" alt="rvault banner" width="100%"/>
+</div>
 
-> Remote File Vault — by @udayapex1
-
----
 
 ## 🚀 Rvault CLI
 
