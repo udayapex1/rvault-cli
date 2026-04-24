@@ -5,7 +5,7 @@ import { program } from "commander";
 import chalk from "chalk";
 import { dev } from "../src/commands/dev.js";
 import axios from "axios";
-
+import { registertest ,register } from "../src/commands/register.js";
 
 const banner = `
 ${chalk.cyan("██████╗ ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗")}
@@ -30,6 +30,7 @@ program
 
   .option("--dev", "Show developer profile and project details")
   .option("--health", "Check server health")
+  .option("--register", "Register a new account ( testing only ) ")
   .addHelpText("before", banner)
   .addHelpText("after", `
 ${chalk.gray("─────────────────────────────────────────────")}
@@ -54,6 +55,10 @@ ${chalk.gray("──────────────────────
 program.on("option:dev", () => {
   dev();
   process.exit(0);
+});
+ program.on("option:register", async() => {
+  console.log("calling register...")
+   await register();
 });
 
 
@@ -119,8 +124,9 @@ if (process.argv.includes("--health")) {
   console.log(chalk.cyan("Checking server health..."));
   axios.get("https://rvault-cli.onrender.com/health")
     .then(response => {
-      console.log(chalk.green("✔ Server is healthy!"));
+      console.log(chalk.green("✔ Server is running !"));
       console.dir(response.data, { depth: null, colors: true });
+      console.log("this feature remove after testing..")
       process.exit(0);
     })
     .catch(error => {
