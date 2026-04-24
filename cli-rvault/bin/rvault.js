@@ -12,6 +12,8 @@ import { profile } from "../src/commands/profile.js";
 import { myuploads } from "../src/commands/myuploads.js";
 import { getfile } from "../src/commands/getfile.js";
 import { deleteCmd } from "../src/commands/delete.js";
+import { storageinfo } from "../src/commands/storageinfo.js";
+import { upload } from "../src/commands/upload.js";
 
 const banner = `
 ${chalk.cyan("██████╗ ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗")}
@@ -69,9 +71,10 @@ program.command("register").description("Create a new account").action(register)
 program.command("login").description("Login to your account").action(login);
 program.command("logout").description("Logout").action(logout);
 program.command("profile").description("View your profile details").action(profile);
+program.command("storageinfo").description("Show storage usage").action(storageinfo);
 
 // ─── Files ───
-program.command("upload <file>").description("Upload a file to vault");
+program.command("upload <file>").description("Upload a file to vault").action(upload);
 program.command("myuploads").alias("ls").description("List your uploaded files").action(myuploads);
 program.command("getfile").alias("download").description("Select and download a file").action(getfile);
 program.command("delete").description("Select and delete a file").action(deleteCmd);

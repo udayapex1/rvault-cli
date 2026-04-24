@@ -1,6 +1,6 @@
 {
   "name": "cli-rvault",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -26,6 +26,7 @@
     "cli-table3": "^0.6.5",
     "commander": "^14.0.3",
     "configstore": "^8.0.0",
+    "form-data": "^4.0.5",
     "ink": "^7.0.1",
     "inquirer": "^13.4.1",
     "open": "^11.0.0",

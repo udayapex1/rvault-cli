@@ -194,3 +194,17 @@ ${chalk.cyan("  │")}
 ${chalk.cyan("  │")}   ${chalk.gray("────────────────────────────────")}
 ${chalk.cyan("  │")}
 `;
+
+// ─────────────────────────────────────────
+// STORAGE
+// ─────────────────────────────────────────
+export const storageBanner = `
+${chalk.cyan("  │")}
+${chalk.cyan("  │")}   ${chalk.cyan("●")} ${chalk.yellow("●")} ${chalk.green("●")}
+${chalk.cyan("  │")}
+${chalk.cyan("  │")}   ${chalk.white.bold("rvault")} ${chalk.cyan("/")} ${chalk.cyan("storageinfo")}
+${chalk.cyan("  │")}   ${chalk.gray("Check your cloud space")}
+${chalk.cyan("  │")}
+${chalk.cyan("  │")}   ${chalk.gray("────────────────────────────────")}
+${chalk.cyan("  │")}
+`;
