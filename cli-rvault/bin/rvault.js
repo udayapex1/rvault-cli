@@ -5,7 +5,7 @@ import { program } from "commander";
 import chalk from "chalk";
 import { dev } from "../src/commands/dev.js";
 import axios from "axios";
-import { registertest ,register } from "../src/commands/register.js";
+import { registertest, register } from "../src/commands/register.js";
 
 const banner = `
 ${chalk.cyan("██████╗ ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗")}
@@ -30,7 +30,6 @@ program
 
   .option("--dev", "Show developer profile and project details")
   .option("--health", "Check server health")
-  .option("--register", "Register a new account ( testing only ) ")
   .addHelpText("before", banner)
   .addHelpText("after", `
 ${chalk.gray("─────────────────────────────────────────────")}
@@ -56,14 +55,11 @@ program.on("option:dev", () => {
   dev();
   process.exit(0);
 });
- program.on("option:register", async() => {
-  console.log("calling register...")
-   await register();
-});
+
 
 
 // ─── Auth ───
-program.command("register").description("Create a new account");
+program.command("register").description("Create a new account").action(register);
 program.command("login").description("Login to your account");
 program.command("logout").description("Logout");
 

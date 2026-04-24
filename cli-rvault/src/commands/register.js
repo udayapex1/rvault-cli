@@ -6,93 +6,129 @@ import { registerBanner } from "../../utils/banners.js";
 import * as authServices from "../services/authServices.js";
 
 
-export const register = async () =>{
-   console.log(registerBanner);
-   // input user details :
-  
-   const { name , email , username , password } = await  inquirer.prompt([
+export const register = async () => {
+  console.log(registerBanner);
+  // input user details :
+
+  const { name, email, username, password } = await inquirer.prompt([
     {
-        type : "input",
-        name : "name",
-        message : chalk.gray("Enter your full name :"),
-        validate : (input) => input.trim() !== "" || "Name cannot be empty"
-    } ,
+      type: "input",
+      name: "name",
+      message: chalk.gray("Enter your full name :"),
+      validate: (input) => input.trim() !== "" || "Name cannot be empty"
+    },
     {
-        type : "input",
-        name : "email",
-        message : chalk.gray("Enter your email :"),
-        validate : (input) => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(input) || "Please enter a valid email address";
-        }
-    } ,
-      {
+      type: "input",
+      name: "email",
+      message: chalk.gray("Enter your email :"),
+      validate: (input) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(input) || "Please enter a valid email address";
+      }
+    },
+    {
       type: "input",
       name: "username",
       message: chalk.gray("  Username") + chalk.cyan(" (@):"),
       validate: (v) => /^[a-z0-9_]{3,20}$/.test(v) || "3-20 chars, lowercase only",
       filter: (v) => v.toLowerCase().replace("@", ""),
     },
-  {
+    {
       type: "password",
       name: "password",
       message: chalk.gray("  Password:"),
       mask: "●",
       validate: (v) => v.length >= 8 || "Min 8 characters",
     },
-   ]);
+  ]);
 
-   const spinner = ora({
+  const spinner = ora({
     text: chalk.gray("  Sending OTP to ") + chalk.cyan(email),
     spinner: "dots",
   }).start();
 
   let userId;
-   
+
   try {
     const res = await authServices.register({ name, email, username, password });
     userId = res.userId;
     spinner.succeed(chalk.green("  OTP sent to ") + chalk.cyan(email));
   } catch (error) {
-     spinner.fail(
-    chalk.red("  " + (error.response?.data?.message || "Registration failed"))
-  );
-  process.exit(1);
+    spinner.fail(chalk.red("  " + (error.message || "Registration failed")));
+
+    const msg = (error.message || "").toLowerCase();
+    if (msg.includes("already") || msg.includes("exist") || msg.includes("duplicate")) {
+      console.log();
+      console.log(chalk.yellow("  ⚠  This email or username is already registered."));
+      console.log(chalk.gray("  Try:") + chalk.cyan("  rvault login"));
+    }
+    process.exit(1);
   }
 
   // ─── Step 3: Verify OTP ───
-console.log();
+  console.log();
 
-const { otp } = await inquirer.prompt([
-  {
-    type: "input",
-    name: "otp",
-    message: chalk.gray("  Enter the OTP you received:"),
-    validate: (v) =>
-      /^\d{6}$/.test(v) || "Enter a valid 6-digit OTP",
-  },
-]);
+  let qrCode, manualKey;
+  let verified = false;
 
-const spinner2 = ora({
-  text: chalk.gray("  Verifying OTP..."),
-  spinner: "dots",
-}).start();
+  while (!verified) {
+    const { otp } = await inquirer.prompt([
+      {
+        type: "input",
+        name: "otp",
+        message: chalk.gray("  Enter the OTP you received:"),
+        validate: (v) => /^\d{6}$/.test(v) || "Enter a valid 6-digit OTP",
+      },
+    ]);
 
-let qrCode, manualKey;
+    const spinner2 = ora({ text: chalk.gray("  Verifying OTP..."), spinner: "dots" }).start();
 
-try {
-  const res = await authServices.verifyOTP({ userId, otp });
+    try {
+      const res = await authServices.verifyOTP(userId, otp);
 
-  // assuming your backend returns { qrCode, manualKey }
-  qrCode = res.qrCode;
-  manualKey = res.manualKey;
+      qrCode = res.qrCode ?? res.qr ?? res.qrCodeUrl ?? null;
+      manualKey = res.manualKey ?? res.secret ?? res.totpSecret ?? null;
 
-  spinner2.succeed(chalk.green("  Email verified!"));
-} catch (err) {
-  spinner2.fail(chalk.red("  " + err.message));
-  process.exit(1);
-}
-    // ─── Step 4: TOTP Setup ───
+      spinner2.succeed(chalk.green("  Email verified!"));
+      verified = true;
+    } catch (err) {
+      spinner2.fail(chalk.red("  " + (err.message || "Invalid OTP")));
+      console.log();
+
+      const { action } = await inquirer.prompt([
+        {
+          type: "rawlist",
+          name: "action",
+          message: chalk.gray("  What would you like to do?"),
+          choices: [
+            { name: "Try again (enter OTP again)", value: "retry" },
+            { name: "Resend OTP to my email", value: "resend" },
+            { name: "Cancel registration", value: "cancel" },
+          ],
+        },
+      ]);
+
+      if (action === "cancel") {
+        console.log(chalk.gray("\n  Registration cancelled.\n"));
+        process.exit(0);
+      }
+
+      if (action === "resend") {
+        const spinner3 = ora({ text: chalk.gray("  Sending a new OTP..."), spinner: "dots" }).start();
+        try {
+          await authServices.resendOTP(userId);
+          spinner3.succeed(chalk.green("  New OTP sent to ") + chalk.cyan(email));
+        } catch (e) {
+          spinner3.fail(chalk.red("  " + (e.message || "Failed to resend OTP")));
+          process.exit(1);
+        }
+        console.log();
+      }
+      // "retry" falls through to top of while loop automatically
+    }
+  }
+
+  // ─── Step 4: TOTP Setup ───
   console.log();
   console.log(chalk.cyan("  ┌─────────────────────────────────────────┐"));
   console.log(chalk.cyan("  │") + chalk.yellow.bold("  Setup Google Authenticator            ") + chalk.cyan(" │"));
@@ -107,17 +143,17 @@ try {
   console.log(chalk.gray("  3. Paste the manual key above"));
   console.log();
 
-    // Display QR code in terminal:
-    const { openQR } = await inquirer.prompt([
-   {
+  // Display QR code in terminal:
+  const { openQR } = await inquirer.prompt([
+    {
       type: "confirm",
       name: "openQR",
       message: chalk.gray("  Open QR code in browser?"),
       default: true,
     },
-    ]);
+  ]);
 
-    if (openQR) {
+  if (openQR) {
     const { default: open } = await import("open");
     // Save QR as temp HTML and open
     const fs = await import("fs");
@@ -137,7 +173,7 @@ try {
     console.log(chalk.green("  ✓  QR opened in browser!"));
   };
 
-   console.log();
+  console.log();
   console.log(chalk.gray("  After scanning, run:"));
   console.log(chalk.cyan("  $ rvault login"));
   console.log();
@@ -151,5 +187,5 @@ try {
 };
 
 export const registertest = async () => {
-    console.log("thi sis tes")
+  console.log("thi sis tes")
 }
