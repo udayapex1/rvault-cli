@@ -17,10 +17,14 @@ ${chalk.gray("  Remote File Vault — by")} ${chalk.cyan("@udayapex1")}
 // REGISTER
 // ─────────────────────────────────────────
 export const registerBanner = `
-${chalk.cyan("  ┌─────────────────────────────────────┐")}
-${chalk.cyan("  │")}  ${chalk.white.bold("rvault")} ${chalk.gray("·")} ${chalk.green("register")}               ${chalk.cyan("│")}
-${chalk.cyan("  │")}  ${chalk.gray("Create your secure vault account")}   ${chalk.cyan("│")}
-${chalk.cyan("  └─────────────────────────────────────┘")}
+${chalk.cyan("  │")}
+${chalk.cyan("  │")}   ${chalk.cyan("●")} ${chalk.yellow("●")} ${chalk.green("●")}
+${chalk.cyan("  │")}
+${chalk.cyan("  │")}   ${chalk.white.bold("rvault")} ${chalk.cyan("/")} ${chalk.gray("register")}
+${chalk.cyan("  │")}   ${chalk.gray("Create your encrypted rvault account")}
+${chalk.cyan("  │")}
+${chalk.cyan("  │")}   ${chalk.gray("────────────────────────────────")}
+${chalk.cyan("  │")}
 `;
 
 // ─────────────────────────────────────────
