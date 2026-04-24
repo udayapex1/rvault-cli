@@ -5,7 +5,13 @@ import { program } from "commander";
 import chalk from "chalk";
 import { dev } from "../src/commands/dev.js";
 import axios from "axios";
-import { registertest, register } from "../src/commands/register.js";
+import { register } from "../src/commands/register.js";
+import { login } from "../src/commands/login.js";
+import { logout } from "../src/commands/logout.js";
+import { profile } from "../src/commands/profile.js";
+import { myuploads } from "../src/commands/myuploads.js";
+import { getfile } from "../src/commands/getfile.js";
+import { deleteCmd } from "../src/commands/delete.js";
 
 const banner = `
 ${chalk.cyan("██████╗ ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗")}
@@ -60,14 +66,15 @@ program.on("option:dev", () => {
 
 // ─── Auth ───
 program.command("register").description("Create a new account").action(register);
-program.command("login").description("Login to your account");
-program.command("logout").description("Logout");
+program.command("login").description("Login to your account").action(login);
+program.command("logout").description("Logout").action(logout);
+program.command("profile").description("View your profile details").action(profile);
 
 // ─── Files ───
 program.command("upload <file>").description("Upload a file to vault");
-program.command("ls").description("List your files");
-program.command("download <filename>").description("Download a file");
-program.command("delete <filename>").description("Delete a file");
+program.command("myuploads").alias("ls").description("List your uploaded files").action(myuploads);
+program.command("getfile").alias("download").description("Select and download a file").action(getfile);
+program.command("delete").description("Select and delete a file").action(deleteCmd);
 
 // ─── Share ───
 program.command("share <filename>").description("Share file via QR link");

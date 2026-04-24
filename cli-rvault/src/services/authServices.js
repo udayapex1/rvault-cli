@@ -55,3 +55,31 @@ export async function resendOTP(userId) {
     }
     return response.data;
 }
+
+export async function login({ email, password, totpToken }) {
+    try {
+        const response = await api.post("/api/auth/login", { email, password, totpToken });
+        if (response.status < 200 || response.status >= 300) {
+            throw new Error(response.data?.message || "Login failed");
+        }
+        return response.data; // { message, token, user }
+    } catch (err) {
+        const message =
+            err.response?.data?.message || err.message || "Login failed";
+        throw new Error(message);
+    }
+}
+
+export async function getProfile() {
+    try {
+        const response = await api.get("/api/user/profile");
+        if (response.status < 200 || response.status >= 300) {
+            throw new Error(response.data?.message || "Failed to fetch profile");
+        }
+        return response.data.user;
+    } catch (err) {
+        const message = err.response?.data?.message || err.message || "Failed to fetch profile";
+        throw new Error(message);
+    }
+}
+
